@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_131529) do
   end
 
   create_table "items", force: :cascade do |t|
+    t.string "asin"
     t.string "img_url"
     t.string "title"
     t.string "year"

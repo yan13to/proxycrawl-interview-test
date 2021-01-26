@@ -19,22 +19,31 @@ def parse_html(body)
     price = div.css('.a-price')
 
     item = Item.where(title: title).first
-    attrs = {
-      img_url: img_url,
-      title: title,
-      year: year,
-      stars: stars,
-      rating: rating,
-      price: price
-    }
+
+    # puts div.keys
 
     if item
-      saved = Item.update(attrs)
-    else
-      saved = Item.create(attrs)
-    end
+      updated = item.update(
+        img_url: img_url,
+        year: year,
+        stars: stars,
+        rating: rating,
+        price: price
+      )
 
-    putc '#' if saved
+      puts "updated: #{item.title}" if updated
+    else
+      saved = Item.create(
+        img_url: img_url,
+        title: title,
+        year: year,
+        stars: stars,
+        rating: rating,
+        price: price
+      )
+
+      puts "saved: #{saved.title}" if saved
+    end
   end
 end
 
