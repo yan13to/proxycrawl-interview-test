@@ -1,0 +1,21 @@
+<% @items.each do |item| %>
+  <div class="card d-inline-flex bd-highlight align-items-stretch" style="width:12.7em">
+    <% if item.img_url %>
+      <img src="<%= item.img_url %>" class="rounded float-start" style="width:200px">
+    <% end %>
+    <div class="card-body">
+      <h5 class="card-title">
+        <%= item.title.try(:html_safe) %>
+      </h5>
+      <p>
+        <%= item.year.try(:html_safe) %>
+      </p>
+      <p class="card-text">
+        <%= item.description.try(:html_safe) %>
+      </p>
+      <p>
+        <%= item.price.try(:html_safe) %>
+      </p>
+    </div>
+  </div>
+<% end %>
