@@ -4,7 +4,7 @@ require 'net/http'
 urls = if ENV['URLS'].present?
          ENV['URLS'].split(',')
        else
-         ['https://www.amazon.com/s?k=movie&ref=nb_sb_noss_2']
+         ['https://www.amazon.com/s?k=movie']
        end
 
 def parse_html(body)
