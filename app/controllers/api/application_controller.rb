@@ -4,10 +4,7 @@ module Api
   class ApplicationController < ActionController::API
     before_action :authenticate_user_from_token!
     helper_method :current_user
-
-    def current_user
-      @current_user
-    end
+    attr_accessor :current_user
 
     private
 

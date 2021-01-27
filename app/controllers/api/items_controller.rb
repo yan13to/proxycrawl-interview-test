@@ -46,7 +46,7 @@ module Api
     private
 
     def item_params
-      params.require(:item).permit(:img_url, :title, :year, :stars)
+      params.require(:item).permit(:img_url, :title, :year, :stars, :rating, :price)
     end
   end
 end

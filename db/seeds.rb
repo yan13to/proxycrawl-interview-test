@@ -30,3 +30,5 @@ proxy_crawler.result.each do |attrs|
     puts "saved: #{saved.title}" if saved
   end
 end
+
+# or to CRUD result can be done by api
