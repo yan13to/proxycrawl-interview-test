@@ -1,5 +1,4 @@
-require 'nokogiri'
-require 'net/http'
+require './lib/proxy_crawler'
 
 urls = if ENV['URLS'].present?
          ENV['URLS'].split(',')
@@ -7,59 +6,27 @@ urls = if ENV['URLS'].present?
          ['https://www.amazon.com/s?k=movie']
        end
 
-def parse_html(body)
-  doc = Nokogiri::HTML(body)
+opts = {
+  area_scope: 'div.s-result-item.s-asin',
+  fields: {
+    img_url: 'img',
+    title: 'div.a-section.a-spacing-none > h2.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 > a.a-link-normal.a-text-normal > span.a-size-medium',
+    year: 'div.a-section.a-spacing-none > div.a-row.a-size-base.a-color-secondary > span.a-size-base.a-color-secondary.a-text-normal',
+    stars: 'div.a-section.a-spacing-none.a-spacing-top-micro > div.a-row.a-size-small > span > span > a > i > span',
+    rating: 'div.a-section.a-spacing-none.a-spacing-top-micro > div.a-row.a-size-small > span > a > span.a-size-base',
+    price: 'span.a-price > span.a-offscreen'
+  }
+}
 
-  doc.css('div.s-result-item.s-asin').each do |div|
-    img_url = div.css('img').attr('src')
-    title = div.css('.a-size-medium').text
-    year = div.css('.a-size-base').children[0].text
-    stars = div.css('.a-size-small').children[0].text
-    rating = div.css('.a-size-small').children[1].text
-    price = div.css('.a-price')
-
-    item = Item.where(title: title).first
-
-    # puts div.keys
-
-    if item
-      updated = item.update(
-        img_url: img_url,
-        year: year,
-        stars: stars,
-        rating: rating,
-        price: price
-      )
-
-      puts "updated: #{item.title}" if updated
-    else
-      saved = Item.create(
-        img_url: img_url,
-        title: title,
-        year: year,
-        stars: stars,
-        rating: rating,
-        price: price
-      )
-
-      puts "saved: #{saved.title}" if saved
-    end
-  end
-end
-
-urls.each do |url|
-  uri = URI('https://api.proxycrawl.com')
-  uri.query = URI.encode_www_form(
-    {
-      token: '4DzICyJsQ9W9tfKaWwmv4w',
-      url: url
-    }
-  )
-
-  res = Net::HTTP.get_response(uri)
-
-  if res.code.to_i == 200
-    parse_html(res.body)
-    puts
+proxy_crawler = ProxyCrawler.new(urls, opts)
+proxy_crawler.run
+proxy_crawler.result.each do |attrs|
+  item = Item.where(title: attrs[:title]).first
+  if item
+    updated = item.update(attrs)
+    puts "updated: #{item.title}" if updated
+  else
+    saved = Item.create(attrs)
+    puts "saved: #{saved.title}" if saved
   end
 end
