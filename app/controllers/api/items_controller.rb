@@ -3,8 +3,14 @@
 module Api
   # ItemsController
   class ItemsController < Api::ApplicationController
+    include Pagination
+
     def index
-      @items = Item.all
+      @items = Item.ransack(query)
+                   .result(distinct: true)
+                   .order(order)
+                   .page(page)
+                   .per_page(per_page)
 
       render json: @items.to_json
     end

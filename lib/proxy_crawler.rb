@@ -45,7 +45,7 @@ class ProxyCrawler
     uri = URI(@uri)
     uri.query = URI.encode_www_form(
       {
-        token: '4DzICyJsQ9W9tfKaWwmv4w',
+        token: '4DzICyJsQ9W9tfKaWwmv4w', # or ENV[token]
         url: url
       }
     )

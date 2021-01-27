@@ -18,6 +18,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'nokogiri'
 gem 'whenever', require: false
 gem 'devise'
+gem 'ransack'
+gem 'will_paginate'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
