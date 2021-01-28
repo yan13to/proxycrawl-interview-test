@@ -3,10 +3,8 @@ require './lib/proxy_crawler'
 class ProxyCrawlJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    the_urls = urls
-    the_opts = opts
-    proxy_crawler = ProxyCrawler.new(the_urls, the_opts)
+  def perform(urls)
+    proxy_crawler = ProxyCrawler.new(urls, opts)
     proxy_crawler.run
     proxy_crawler.result.each do |attrs|
       item = Item.where(title: attrs[:title]).first
@@ -17,14 +15,6 @@ class ProxyCrawlJob < ApplicationJob
   end
 
   private
-
-  def urls
-    if ENV['URLS'].present?
-      ENV['URLS'].split(',')
-    else
-      ['https://www.amazon.com/s?k=movie']
-    end
-  end
 
   def opts
     {
